@@ -1,8 +1,5 @@
-#!/usr/bin/env python
-
 import unittest
 from message_generator import MessageGenerator
-from actions_mapper import Action
 from actions_mapper import ActionsMapper
 
 IRRELEVANT_CHARACTER = 'nomatter'

@@ -4,14 +4,8 @@
 #### USER DEFINED VARIABILES - CHANGE THE VALUES TO SUIT YOUR NEEDS ####
 
 # eq installation directory
-# You can use absolute paths or use ~ for home folder
-# Make sure you use a trailing slash / 
 EQHOMES = [
-    "~/programs/takp/drive_e/TAKP/",
-    "~/.PlayOnLinux/wineprefix/takp/drive_c/Everquest/",
-    "~/.PlayOnLinux/wineprefix/takp/drive_c/Everquest_2/",
-    "~/.PlayOnLinux/wineprefix/EQ/drive_c/Everquest/",
-    "~/.PlayOnLinux/wineprefix/EQ_Full/drive_c/EverQuest/"
+    'C:/Users/Public/Daybreak Game Company/Installed Games/EverQuest'
 ]
 
 

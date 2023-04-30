@@ -1,6 +1,4 @@
-#!/usr/bin/python
-
-# Program Name: EQAlerter.py 
+# Program Name: EQAlerter.py
 #               'The EverQuest Alerter'
 # Original Author: Dr. Ronny Bull (A.K.A. Cubber on eqemulator.org)
 # Python Version: 3.5
@@ -32,13 +30,10 @@
 #    along with EQAlerter.  If not, see <http://www.gnu.org/licenses/>.
 
 # libraries
-import subprocess
+
 import time
 import sys
 import os
-import subprocess
-import shlex
-import yaml
 import traceback
 
 from os import listdir
@@ -50,7 +45,7 @@ from dep_check import *
 from character_list import *
 from message_generator import MessageGenerator
 from actions_mapper import ActionsMapper
-from os.path import expanduser
+
 
 
 #### MAIN PROGRAM ####
@@ -60,8 +55,8 @@ DepCheck.verifyOS()
 DepCheck.verifyFlite()
 DepCheck.verifyUrxvt()
 
-# program banner 
-# TODO: NEED FUNKY ASCII ART HERE 
+# program banner
+# TODO: NEED FUNKY ASCII ART HERE
 print("\n\nStarting The EverQuest Alerter\n")
 print("Press Ctrl+C to exit\n")
 
@@ -107,7 +102,7 @@ character = CHARLIST.getName(CHARNUM)
 server = CHARLIST.getServer(CHARNUM)
 
 # generate logfile path
-log_path = "eqlog_%s_%s.txt" % (character, server) 
+log_path = "eqlog_%s_%s.txt" % (character, server)
 log_file = DepCheck.getLogFile(eq_home, character, log_path)
 
 actions_map = ActionsMapper('actions.yml').actions
@@ -115,7 +110,7 @@ actions_map = ActionsMapper('actions.yml').actions
 try:
 
     # open log file
-    with open(log_file, 'r+') as f:
+    with open(log_file, 'r+', encoding='utf-8') as f:
         # move to the end of the file
         f.seek(0,2)
         generator = MessageGenerator(eq_home, character, actions_map)
@@ -137,16 +132,17 @@ try:
                 action.run()
 
 
-
 # handle ctrl+c for clean exit
 except KeyboardInterrupt:
     print("")
     print("Closing The EverQuest Alerter")
-    raise
+    sys.exit(0)
 
-except Exception:
+except Exception as e:
     traceback.print_exc()
+    print("Error: %s" % str(e))
 
 finally:
     f.close()
-    sys.exit()
+    sys.exit(0)
+#

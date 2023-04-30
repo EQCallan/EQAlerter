@@ -29,30 +29,26 @@ class DepCheck:
     def __init__(self):
         print("DEBUG: Checking dependencies")
 
+# verify that the SAPI TTS engine is installed
+def verifyFlite():
+    print("DEBUG: Checking SAPI TTS engine")
 
-    # verify the plaftform is Linux
-    def verifyOS():
-        if platform.system() != 'Linux':
-            print("Here is a nickle, go get yourself a real Operating System kid!")
-            print("")
-            print("Note: This application only works on Linux due to the CMU flite TTS engine dependency.")
-            sys.exit()
-
-    # verify that CMU flite TTS engine is installed
-    def verifyFlite():
-        print("DEBUG: flite install path:")
-        if subprocess.call(["which", "flite"]) == 1:
-            print("")
-            print("ERROR: flite is either not installed on the system or not in your path. Please install it via your distro's package manager or from source and add it to your path")
-            sys.exit()
+    try:
+        import win32com.client
+        speaker = win32com.client.Dispatch("SAPI.SpVoice")
+        print("DEBUG: SAPI TTS engine is installed")
+    except ImportError:
         print("")
+        print("ERROR: SAPI TTS engine is not installed on your system. Please install it and try again.")
+        sys.exit()
 
-    # verify that URXVT Terminal emulator is installed
-    def verifyUrxvt():
-        print("DEBUG: urxvt install path:")
-        if subprocess.call(["which", "urxvt"]) == 1:
+
+    # verify that Windows Terminal is installed
+    def verifyWindowsTerminal():
+        print("DEBUG: Windows Terminal install path:")
+        if not isfile("C:\\Program Files\\WindowsApps\\Microsoft.WindowsTerminal_*\\wt.exe"):
             print("")
-            print("ERROR: urxvt is either not installed on the system or not in your path. Please install it via your distro's package manager or from source and add it to your path")
+            print("ERROR: Windows Terminal is either not installed on the system or not in your path. Please install it from the Microsoft Store or from source and add it to your path")
             sys.exit()
         print("")
 
@@ -84,8 +80,8 @@ class DepCheck:
     def pathScan(base_folder, filename):
         if os.path.isfile(base_folder+filename):
             return base_folder+filename
-        if os.path.isfile(base_folder + "Logs/" + filename):
-            return base_folder + "Logs/" + filename
+        if os.path.isfile(base_folder + "Logs\\" + filename):
+            return base_folder + "Logs\\" + filename
         return
 
 #End of Class

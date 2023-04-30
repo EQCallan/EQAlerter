@@ -1,6 +1,4 @@
-#!/usr/bin/python
-
-# Program Name: EQAlerter-Discord.py 
+# Program Name: EQAlerter-Discord.py
 #               'The EverQuest Alerter - Discord Bot Version'
 # Original Author: Dr. Ronny Bull (A.K.A. Cubber on eqemulator.org)
 # Python Version: 3.5
@@ -11,7 +9,7 @@
 #           When running the program will parse your EverQuest chat log file for key phrases
 #           contained in the Config.py file and trigger alerts using the discord bot API.
 
-# Dependencies: Python 3 && CMU Flite text to speech engine && discord module 
+# Dependencies: Python 3 && CMU Flite text to speech engine && discord module
 #               python3 -m pip install --user -U discord.py[voice] # discord module
 
 # IMPORTANT: Verify that your 'eqclient.ini' file contains the following line: Log=TRUE
@@ -32,16 +30,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with EQAlerter.  If not, see <http://www.gnu.org/licenses/>.
 
-import subprocess
-import time
-import sys
 import os
 import discord
 import asyncio
 
 from os import listdir
 from os.path import isfile, join
-from discord.ext import commands
+
 
 # classes
 from Config import *
@@ -56,8 +51,8 @@ DepCheck.verifyFlite()
 DepCheck.verifyLogging()
 
 
-# program banner 
-# TODO: NEED FUNKY ASCII ART HERE 
+# program banner
+# TODO: NEED FUNKY ASCII ART HERE
 print("\n\nStarting The EverQuest Alerter - Discord Bot Version\n")
 print("Press Ctrl+C to exit\n")
 
@@ -90,7 +85,7 @@ CHARACTER = CHARLIST.getName(CHARNUM)
 SERVER = CHARLIST.getServer(CHARNUM)
 
 # generate logfile path
-LOGPATH = "Logs/eqlog_%s_%s.txt" % (CHARACTER, SERVER) 
+LOGPATH = "Logs/eqlog_%s_%s.txt" % (CHARACTER, SERVER)
 LOGFILE = EQHOME+LOGPATH
 print(LOGFILE)
 DepCheck.verifyLogFile(CHARACTER, LOGFILE)
@@ -117,7 +112,7 @@ async def on_message(message):
             if log.author == message.author:
                 counter += 1
         await client.edit_message(tmp, 'You have {} messages.'.format(counter))
-   
+
     # bot info
     elif message.content.startswith('!who'):
         await client.send_message(message.channel, 'Hello, my name is AlerterBot.  I am here to assist you during your adventures. My creator is Nuggethead.', tts=False)
@@ -129,7 +124,7 @@ async def on_message(message):
     # TODO: supported raids
     elif message.content.startswith('!raids'):
         await client.send_message(message.channel, 'I can provide support during the following raid events:\n - RoF(A Matter of Life and Death - Chapterhouse, Dispelling the Shadows - Plane of Shadow, Glimpse the Unseen - The Threshold, Ulrich the Ageless - The Threshold, Monarch Widow - The Threshold, An End to Fear - The Epicenter)\n - CoF(Bixie Warfront: Pelzias Plot, The Dead Hills: Xulous Prime, Neriak - Fourth Gate: Houses of Thex, Neriak - Fourth Gate: Hate Rising, Tower of Rot: Lord Kyle Bayle, Argin-Hiz: Burn Out, The Void (H): The Journey Home)\n - TDS(Defense of the City, Principal Quastori Numicia, Praetor Vitio, Principal Vicarum Nomia)\n - TBM( Plane of Hate: Revisited - Maestro of Rancor & Innorukk, Anashti Sul - Lady of Life, Wither and Decay, Grannus of the Cleansing Steam, Stem the Tide, Grummus!, High Bokon Boromas, Anashti Sul - Enslaver of Souls)\n - EoK(Doorstep of War - Lceanium, The Summoning of Droga - Droga, Prince Selrach Dizok - Chardok, Queen Velazul Dizok - Chardok)\n - Anniversary(The Plane of War: 15th anniversary, 17th Anniversary raid - Hates Fury: Seventeen Pieces of Silver)', tts=False)
-    
+
 # loop through log file
 @client.event
 async def readline(f):
@@ -142,14 +137,14 @@ async def readline(f):
 # begin parsing log file for triggers and perform actions
 @client.event
 async def logfile_loop():
-    
+
     # open log file for reading
     with open(LOGFILE, 'r+') as f:
 
         # move to the end of the file
         f.truncate()
-    
-        
+
+
         #### PARSE FOR TRIGGERS AND GENERATE ALERT IN DISCORD ####
         while True:
             line = await readline(f)
@@ -169,86 +164,86 @@ async def logfile_loop():
                 if (MARNEK2) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Corpse collector is dragging a corpse', tts=True)
                     #os.system('flite -voice slt -t "Corpse collector is dragging a corpse"')
-                
+
                 # Dispelling the Shadows - Plane of Shadow
                 # multiplayer - send to discord
                 if (SHADOW1) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Group heal', tts=True)
                     #os.system('flite -voice slt -t "Group heal"')
-                
+
                 # single player - use local tts
                 SHAD2CHAR = SHADOW2 + CHARACTER
                 if (SHAD2CHAR) in line:
                     os.system('flite -voice slt -t "D, A, and get aggro"')
-                
+
                 # single player - use local tts
                 SHAD3CHAR = SHADOW3 + CHARACTER
                 if (SHAD3CHAR) in line:
                     os.system('flite -voice slt -t "Move away from the front"')
-                
+
                 # single player - use local tts
                 SHAD4CHAR = SHADOW4 + CHARACTER
                 if (SHAD4CHAR) in line:
                     os.system('flite -voice slt -t "Move out of range"')
-               
+
                 # multiplayer - send to discord
                 if (SHADOW5) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Back away from the mob A E incoming', tts=True)
                     #os.system('flite -voice slt -t "Back away from the mob A E incoming"')
-                
+
                 # single player - use local tts
                 SHAD6CHAR = SHADOW6 + CHARACTER
                 if (SHAD6CHAR) in line:
                     os.system('flite -voice slt -t "Run away from the raid"')
-                
+
                 # multiplayer - send to discord
                 if (SHADOW7) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Hide behind a pillar until the D, O, T, fades', tts=True)
                     #os.system('flite -voice slt -t "Hide behind a pillar until the D, O, T, fades"')
-                
+
 
                 # Glimpse, the Unseen - The Threshold
                 # single player - use local tts
                 GLIMPCHAR = GLIMPSE + CHARACTER
                 if (GLIMPCHAR) in line:
                     os.system('flite -voice slt -t "run far away from the raid, east"')
-                
+
 
                 # Ulrich the Ageless - The Threshold
                 # single player - use local tts
                 if (ULRICH1) in line:
                     os.system('flite -voice slt -t "run through an aura, do not linger"')
-               
+
                 # single player - use local tts
                 if (ULRICH2) in line:
                     os.system('flite -voice slt -t "run through an aura, or D A"')
 
-                
+
                 # Monarch Widow - The Threshold
                 # multiplayer - send to discord
                 if (MONARCH) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'move raid 50 feet counter-clockwise to avoid web', tts=True)
                     #os.system('flite -voice slt -t "move raid 50 feet counter-clockwise to avoid web"')
-                
+
 
                 # An End to Fear - The Epicenter
                 # single player - use local tts
                 if (ENDFEAR1) in line:
                     os.system('flite -voice slt -t "move out of melee range"')
-                
+
                 # single player - use local tts
                 if (ENDFEAR2) in line:
                     os.system('flite -voice slt -t "get curse cure"')
-                
+
                 # single player - use local tts
                 if (ENDFEAR3) in line:
                     os.system('flite -voice slt -t "get corruption cure"')
-                
+
                 # multiplayer - send to discord
                 if (ENDFEAR4) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Xaric is vulnerable, kill kill kill', tts=True)
                     #os.system('flite -voice slt -t "Xaric is vulnerable, kill kill kill"')
-                
+
                 # single player - use local tts
                 if (ENDFEAR5) in line:
                     os.system('flite -voice slt -t "stop D P S until effect wears off"')
@@ -257,7 +252,7 @@ async def logfile_loop():
 
 
                 ##### START CoF #####
-                
+
                 # Bixie Warfront: Pelzia's Plot raid.
                 # single player - use local tts
                 PEL1CHAR = PELZIA1 + CHARACTER
@@ -268,29 +263,29 @@ async def logfile_loop():
                 PEL2CHAR = PELZIA2 + CHARACTER
                 if (PEL2CHAR) in line:
                     os.system('flite -voice slt -t "run east away from raid"')
-                
+
 
                 # The Dead Hills: Xulous Prime raid.
                 # single player - use local tts
                 if (XULOUS1) in line:
                     os.system('flite -voice slt -t "kite the cloud of disease"')
-                
+
                 # single player - use local tts
                 if (XULOUS2) in line:
                     os.system('flite -voice slt -t "kite the cloud of disease"')
-                
+
                 # single player - use local tts
                 if (XULOUS3) in line:
                     os.system('flite -voice slt -t "get disease cure"')
-                
+
                 # single player - use local tts
                 if (XULOUS4) in line:
                     os.system('flite -voice slt -t "move out of the disease aura"')
-                
+
                 # single player - use local tts
                 if (XULOUS5) in line:
                     os.system('flite -voice slt -t "gate out now"')
-                
+
 
                 # Neriak - Fourth Gate: Houses of Thex raid.
                 # multiplayer - send to discord
@@ -307,16 +302,16 @@ async def logfile_loop():
                 THEX3CHAR = THEX3 + CHARACTER
                 if (THEX3CHAR) in line:
                     os.system('flite -voice slt -t "kite until the energy pulse fades away"')
-               
+
                 # single player - use local tts
                 if (THEX4) in line:
                     os.system('flite -voice slt -t "move out of the lightning pulse"')
-                
+
                 # single player - use local tts
                 THEX5CHAR = THEX5 + CHARACTER
                 if (THEX5CHAR) in line:
                     os.system('flite -voice slt -t "run away from the raid"')
-                
+
 
                 # Neriak - Fourth Gate: Hate Rising raid.
                 # single player - use local tts
@@ -334,7 +329,7 @@ async def logfile_loop():
                 if (BAYLE1) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'move out of melee range and hold pets', tts=True)
                     #os.system('flite -voice slt -t "move out of melee range and hold pets"')
-                
+
                 # multiplayer - send to discord
                 if (BAYLE2) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'resume melee and send in pets', tts=True)
@@ -427,32 +422,32 @@ async def logfile_loop():
                     #os.system('flite -voice slt -t "move away from the A E circle"')
 
                 ##### END Fifteenth Anniversary #####
-                
+
 
                 ##### START TDS #####
-                
+
                 # Defense of the City
                 # single player - use local tts
                 if (TDSDEF1) in line:
                     os.system('flite -voice slt -t "move away from the raid now"')
-                
+
                 # single player - use local tts
                 if (TDSDEF2) in line:
                     os.system('flite -voice slt -t "It is safe to return to the raid"')
-                
+
                 # single player - use local tts
                 if (TDSDEF3) in line:
                     os.system('flite -voice slt -t "It is safe to return to the raid"')
-                
+
                 # single player - use local tts
                 TDSD4CHAR = TDSDEF4 + CHARACTER
                 if (TDSD4CHAR) in line:
                     os.system('flite -voice slt -t "It is safe to return to the raid"')
-                
+
                 # single player - use local tts
                 if (TDSDEF5) in line:
                     os.system('flite -voice slt -t "Get a disease cure"')
-              
+
 
                 # Principal Quastori Numicia
                 # single player - use local tts
@@ -474,27 +469,27 @@ async def logfile_loop():
                 if (VITIO2) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Move away from his right side', tts=True)
                     #os.system('flite -voice slt -t "Move away from his right side"')
-                
+
                 # multiplayer - send to discord
                 if (VITIO3) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Move away from Vitio', tts=True)
                     #os.system('flite -voice slt -t "Move away from Vitio"')
-                
+
                 # multiplayer - send to discord
                 if (VITIO4) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Get close to Vitio', tts=True)
                     #os.system('flite -voice slt -t "Get close to Vitio"')
-                
+
                 # multiplayer - send to discord
                 if (VITIO5) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'move away from his back', tts=True)
                     #os.system('flite -voice slt -t "Move away from his back"')
-                
+
                 # multiplayer - send to discord
                 if (VITIO6) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Main tank drop aggro now', tts=True)
                     #os.system('flite -voice slt -t "Main tank drop aggro now"')
-                
+
                 # multiplayer - send to discord
                 if (VITIO7) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Next tank start taunting now', tts=True)
@@ -506,44 +501,44 @@ async def logfile_loop():
                 if (NOMIA1) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Move away from the target', tts=True)
                     #os.system('flite -voice slt -t "Move away from the target"')
-                
+
                 # multiplayer - send to discord
                 if (NOMIA2) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Move away from the blob', tts=True)
                     #os.system('flite -voice slt -t "Move away from the blob"')
-               
+
                 # single player - use local tts
                 NOM3CHAR = CHARACTER + NOMIA3
                 if (NOM3CHAR) in line:
                     os.system('flite -voice slt -t "Run away from the raid"')
-                
+
                 # single player - use local tts
                 if (NOMIA4) in line:
                     os.system('flite -voice slt -t "Start running or get a corruption cure"')
-               
+
                 # multiplayer - send to discord
                 if (NOMIA5) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'D P S on totems', tts=True)
                     #os.system('flite -voice slt -t "D P S on totems"')
-               
+
                 # single player - use local tts
                 if (NOMIA6) in line:
                     os.system('flite -voice slt -t "Move away from the raid"')
-               
+
                 # multiplayer - send to discord
                 if (NOMIA7) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Move away from the target for 10 seconds', tts=True)
                     #os.system('flite -voice slt -t "Move away from the target for 10 seconds"')
-               
+
                 # multiplayer - send to discord
                 if (NOMIA8) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Heal the totems', tts=True)
                     #os.system('flite -voice slt -t "Heal the totems"')
-               
+
                 # single player - use local tts
                 if (NOMIA9) in line:
                     os.system('flite -voice slt -t "Run away you are the target for the A E"')
-               
+
                 ##### END TDS #####
 
 
@@ -573,16 +568,16 @@ async def logfile_loop():
                 if (LIFE1) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'run into the aura now', tts=True)
                     #os.system('flite -voice slt -t "Run into the aura now"')
-               
+
                 # single player - use local tts
                 if (LIFE2) in line:
                     os.system('flite -voice slt -t "Do not get healed, you will explode"')
-               
+
                 # multiplayer - send to discord
                 if (LIFE3) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Move to the area where the skull is facing', tts=True)
                     #os.system('flite -voice slt -t "Move to the area where the skull is facing"')
-              
+
 
                 # Wither and Decay
                 # multiplayer - send to discord
@@ -609,7 +604,7 @@ async def logfile_loop():
                 # single player - use local tts
                 if (ANASHTI3) in line:
                     os.system('flite -voice slt -t "Your cured"')
-                
+
                 # single player - use local tts
                 if (ANASHTI4) in line:
                     os.system('flite -voice slt -t "Do not cure the gift of endless life"')
@@ -634,7 +629,7 @@ async def logfile_loop():
                 if (ANASHTI9) in line:
                     os.system('flite -voice slt -t "Cure disease once"')
 
-                
+
                 # Grannus of the Cleansing Steam
                 # single player - use local tts
                 if (GRANNUS1) in line:
@@ -701,7 +696,7 @@ async def logfile_loop():
                 ENSL1CHAR = ENSLAVER1 + CHARACTER
                 if (ENSL1CHAR) in line:
                     os.system('flite -voice slt -t "Run north or south away from the raid"')
-                
+
                 # multiplayer - send to discord
                 if (ENSLAVER2) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Get close to the raid', tts=True)
@@ -721,18 +716,18 @@ async def logfile_loop():
 
 
                 ##### START 17th Anniversary Raid #####
-               
+
                 # Seventeen pieces of silver raid
                 # multiplayer - send to discord
                 if (HF17) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'run through the aura now', tts=True)
                     #os.system('flite -voice slt -t "run through the aura now"')
-                
+
                 ##### END 17th Anniversary Raid #####
 
 
                 ##### START EoK RAIDS #####
-                
+
                 # Doorstep of War - Lceanium
                 # multiplayer - send to discord
                 if (LCE1) in line:
@@ -743,12 +738,12 @@ async def logfile_loop():
                 if (LCE2) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Move away from her left side', tts=True)
                     #os.system('flite -voice slt -t "Move away from her left side"')
-                
+
                 # multiplayer - send to discord
                 if (LCE3) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Move away from her right side', tts=True)
                     #os.system('flite -voice slt -t "Move away from her right side"')
-                
+
                 # multiplayer - send to discord
                 if (LCE4) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'Move away from her back', tts=True)
@@ -765,17 +760,17 @@ async def logfile_loop():
                 if (DROGA2) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'move away from the red ring around droga', tts=True)
                     #os.system('flite -voice slt -t "move away from the red ring around droga"')
-                
+
                 # multiplayer - send to discord
                 if (DROGA3) in line:
                     await client.send_message(discord.Object(id=GENERAL_ID), 'cure corruption', tts=True)
                     #os.system('flite -voice slt -t "cure corruption"')
-                
+
                 # single player - use local tts
                 DROG4CHAR = DROGA4 + CHARACTER
                 if (DROG4CHAR) in line:
                     os.system('flite -voice slt -t "move away from raid and out of drogas line of sight"')
-                
+
                 # single player - use local tts
                 DROG5CHAR = DROGA5 + CHARACTER
                 if (DROG5CHAR) in line:
@@ -802,7 +797,7 @@ async def logfile_loop():
 
 
                 ##### START GENERAL UTILITY ALERTS #####
-                
+
                 # NOTE: These are for the user running the script, and will not be sent to the Discord channel
 
                 # Invis dropped
@@ -838,7 +833,7 @@ async def logfile_loop():
 
                 if (FDBROKEN) in line:
                     os.system('flite -voice slt -t "feign death was broken"')
-                
+
                 # Feign death all clear
                 if (FDCLEAR) in line:
                     os.system('flite -voice slt -t "you can get up now"')
@@ -846,7 +841,7 @@ async def logfile_loop():
                 # Feign death resist
                 if (FDRESIST) in line:
                     os.system('flite -voice slt -t "you resume feigning death"')
-                
+
                 ##### END GENERAL UTILITY ALERTS #####
 
             # end outer if
@@ -854,5 +849,5 @@ async def logfile_loop():
 # run logfile loop
 client.loop.create_task(logfile_loop())
 
-# run the bot using the TOKEN defined in Config.py 
+# run the bot using the TOKEN defined in Config.py
 client.run(TOKEN)

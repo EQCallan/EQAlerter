@@ -20,14 +20,14 @@ class LinkedList:
         self.__tail = None
         self.__size = 0
 
-    # Return the head element in the list 
+    # Return the head element in the list
     def getFirst(self):
         if self.__size == 0:
             return None
         else:
             return self.__head.element
 
-    # Return the last element in the list 
+    # Return the last element in the list
     def getLast(self):
         if self.__size == 0:
             return None
@@ -56,7 +56,7 @@ class LinkedList:
 
         return result
 
-    # Add an element to the end of the list 
+    # Add an element to the end of the list
     def add(self, e, s):
         newCharacter = Character(e, s) # Create a new node for e
 
@@ -95,7 +95,7 @@ class LinkedList:
     # Return an iterator for a linked list
     def __iter__(self):
         return LinkedListIterator(self.__head)
-    
+
 
 # The Character class
 class Character:
@@ -105,7 +105,7 @@ class Character:
         self.next = None
 
 
-class LinkedListIterator: 
+class LinkedListIterator:
     def __init__(self, head):
         self.current = head
 
@@ -116,6 +116,6 @@ class LinkedListIterator:
             name = self.current.element
             server = self.current.server
             self.current = self.current.next
-            return (name, server)    
+            return (name, server)
 
 # End of Class
