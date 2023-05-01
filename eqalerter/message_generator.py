@@ -1,6 +1,8 @@
 from delayed_message import DelayedMessage
 from multi_channel_message import MultiChannelMessage
-
+from base_message import BaseMessage
+from audio_message import AudioMessage
+from visual_message import VisualMessage
 
 class MessageGenerator:
 

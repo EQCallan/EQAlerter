@@ -50,10 +50,6 @@ from actions_mapper import ActionsMapper
 
 #### MAIN PROGRAM ####
 
-# dependency checks
-DepCheck.verifyOS()
-DepCheck.verifyFlite()
-DepCheck.verifyUrxvt()
 
 # program banner
 # TODO: NEED FUNKY ASCII ART HERE
@@ -105,7 +101,7 @@ server = CHARLIST.getServer(CHARNUM)
 log_path = "eqlog_%s_%s.txt" % (character, server)
 log_file = DepCheck.getLogFile(eq_home, character, log_path)
 
-actions_map = ActionsMapper('actions.yml').actions
+actions_map = ActionsMapper('c:/eqalerterplus/EQAlerter/eqalerter/actions.yml').actions
 
 try:
 

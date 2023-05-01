@@ -5,7 +5,7 @@
 
 # eq installation directory
 EQHOMES = [
-    'C:/Users/Public/Daybreak Game Company/Installed Games/EverQuest'
+    'C:/Users/Public/Daybreak Game Company/Installed Games/EverQuest/'
 ]
 
 

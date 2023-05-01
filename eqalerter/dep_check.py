@@ -30,20 +30,19 @@ class DepCheck:
         print("DEBUG: Checking dependencies")
 
 # verify that the SAPI TTS engine is installed
-def verifyFlite():
-    print("DEBUG: Checking SAPI TTS engine")
+    def verifyFlite():
+        print("DEBUG: Checking SAPI TTS engine")
 
-    try:
-        import win32com.client
-        speaker = win32com.client.Dispatch("SAPI.SpVoice")
-        print("DEBUG: SAPI TTS engine is installed")
-    except ImportError:
-        print("")
-        print("ERROR: SAPI TTS engine is not installed on your system. Please install it and try again.")
-        sys.exit()
+        try:
+            import win32com.client
+            speaker = win32com.client.Dispatch("SAPI.SpVoice")
+            print("DEBUG: SAPI TTS engine is installed")
+        except ImportError:
+            print("")
+            print("ERROR: SAPI TTS engine is not installed on your system. Please install it and try again.")
+            sys.exit()
 
-
-    # verify that Windows Terminal is installed
+# verify that Windows Terminal is installed
     def verifyWindowsTerminal():
         print("DEBUG: Windows Terminal install path:")
         if not isfile("C:\\Program Files\\WindowsApps\\Microsoft.WindowsTerminal_*\\wt.exe"):
@@ -53,19 +52,19 @@ def verifyFlite():
         print("")
 
 
-    # verify that LOG=TRUE in eqclient.ini
+# verify that LOG=TRUE in eqclient.ini
     def verifyLogging(eqhome):
         # open eqclient.ini for reading
         # search the file for LOG=TRUE
         # if not found error out
         # else proceed on
-        if 'Log=TRUE' in open(eqhome+"eqclient.ini").read():
+        if 'Log=1' in open(eqhome+"eqclient.ini").read():
             print("DEBUG: Logging is enabled")
         else:
             print("ERROR: Please enable logging in your 'eqclient.ini' file by setting Log=TRUE")
             sys.exit()
 
-    # check for character log file
+# check for character log file
     def getLogFile(eqhome, character, logpath):
         logfile = DepCheck.pathScan(eqhome, logpath)
         if logfile:
@@ -73,15 +72,16 @@ def verifyFlite():
             return logfile
         else:
             print("\n\nERROR: No chat log file exists for the selected character.\n")
-            print("Please verify that 'Log=TRUE' in 'eqclient.ini',\n")
+            print("Please verify that 'Log=1' in 'eqclient.ini',\n")
             print("then log the character into the game and re-run this utility.\n")
             sys.exit()
 
     def pathScan(base_folder, filename):
-        if os.path.isfile(base_folder+filename):
-            return base_folder+filename
-        if os.path.isfile(base_folder + "Logs\\" + filename):
-            return base_folder + "Logs\\" + filename
-        return
+        if os.path.isfile(os.path.join(base_folder, filename)):
+            return os.path.join(base_folder, filename)
+        if os.path.isfile(os.path.join(base_folder, "Logs", filename)):
+            return os.path.join(base_folder, "Logs", filename)
+        return None
+
 
 #End of Class

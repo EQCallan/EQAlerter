@@ -11,4 +11,3 @@ class MultiChannelMessage(BaseMessage):
     def run(self):
         AudioMessage(self.message).run()
         VisualMessage(self.message, self.eq_folder).run()
-
